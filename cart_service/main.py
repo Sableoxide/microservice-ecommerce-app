@@ -1,7 +1,56 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from starlette.middleware.cors import CORSMiddleware
+from beanie import init_beanie
+#from motor.motor_asyncio import AsyncIOMotorClient
+from .routes import cart_service
+from .database import connect_to_mongo, close_connection
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        await connect_to_mongo()
+        print("Connected to the DB successfully")
+    except Exception as e:
+        print(f"Connection to DB FAILED: {e}")
+        raise e
+    yield
+    await close_connection()
+    
+DESCRIPTION = """
+    This is a microservice.
+"""
+
+app = FastAPI(
+    title = "CART MICROSERVICE",
+    description = DESCRIPTION,
+    version = "1.0.0",
+    contact = {
+        "name": "Goko Frank",
+        "email": "frank432kinuthia@gmail.com",
+    },
+    license_info = {
+        "name": "MIT",
+        "url": "https://github.com/Sableoxide/microservice-ecommerce-app/blob/main/LICENSE",
+    },
+    lifespan = lifespan
+    )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
+
 
 @app.get("/")
 async def read_route():
-    return {"message": "welcome to rooit"}
+    
+    return {"message": f"tttt"}
+
+app.include_router(cart_service)
