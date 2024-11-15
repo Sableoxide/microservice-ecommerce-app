@@ -2,11 +2,10 @@
 name: Documentation Improvement
 about: Suggest improvements or additions to the project's documentation
 title: '[DOC] - '
-labels: documentation
-assignees: ''
+labels: docs
 ---
 
-**Describe the documentation issue**
+**DESCRIPTION**
 A clear and concise description of the issue with the existing documentation.
 
 **Describe the proposed change**
