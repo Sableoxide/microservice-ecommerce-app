@@ -14,6 +14,8 @@ async def connect_to_mongo():
     try:
         client = AsyncIOMotorClient(MONGO_URI, server_api=ServerApi('1'))
         await init_beanie(database=client.cart_db, document_models=doc_models)
+        """ Create the db indexes """
+        client.cart_db.cart_items.create_index([("product_id", 1)], unique=True)
         print("Connected to MongoDB!")
     except Exception as e:
         print(f"Error connecting to MongoDB: {e}")
