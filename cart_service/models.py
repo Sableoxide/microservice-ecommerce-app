@@ -6,4 +6,5 @@ class Cart_Items(Document):
     total_price: float
 
     class Settings:
-        name = "cart_items" 
+        name = "cart_items"
+        indexes = ["product_id"] 

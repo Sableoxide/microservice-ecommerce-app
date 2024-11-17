@@ -54,3 +54,5 @@ async def read_route():
     return {"message": f"tttt"}
 
 app.include_router(cart_service)
+
+# uvicorn cart_service.main:app --reload
