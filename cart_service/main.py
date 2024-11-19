@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
 from beanie import init_beanie
@@ -44,14 +45,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+@app.exception_handler(Exception)
+async def internal_server_error_handler(request: Request, exc: Exception):
+    # Log the error silently (optional)
+    # log.error(f"Internal Server Error: {exc}") 
+    
+    # Return a custom JSON response
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"message": "An unexpected error occurred. Please try again later."}
+    )
 
 
 
 @app.get("/")
 async def read_route():
     
-    return {"message": f"tttt"}
+    return {"msg": "welcome"}
 
 app.include_router(cart_service)
 
