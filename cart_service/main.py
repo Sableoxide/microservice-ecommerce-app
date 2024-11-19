@@ -1,15 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
-from beanie import init_beanie
-#from motor.motor_asyncio import AsyncIOMotorClient
+
 from .routes import cart_service
 from .database import connect_to_mongo, close_connection
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
         await connect_to_mongo()
+        
         print("Connected to the DB successfully")
     except Exception as e:
         print(f"Connection to DB FAILED: {e}")
@@ -44,14 +46,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+@app.exception_handler(Exception)
+async def internal_server_error_handler(request: Request, exc: Exception):
+    # Log the error silently (optional)
+    # log.error(f"Internal Server Error: {exc}") 
+    
+    # Return a custom JSON response
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"message": "An unexpected error occurred. Please try again later."}
+    )
 
 
 
 @app.get("/")
 async def read_route():
     
-    return {"message": f"tttt"}
+    return {"msg": "welcome"}
 
 app.include_router(cart_service)
 
