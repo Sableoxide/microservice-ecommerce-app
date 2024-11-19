@@ -33,5 +33,5 @@ async def add_to_cart(item: Cart_Items_IN):
 
 @cart_service.get("", response_model=CartItems_ResponseModel)
 async def get_all_cart_items():
-    cart_items = await Cart_Items.all().to_list()
-    return {cart_items}
+    cart_items = await Cart_Items.all().to_list()  
+    return {"data": cart_items}
