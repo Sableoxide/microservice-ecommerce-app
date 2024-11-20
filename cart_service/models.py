@@ -1,15 +1,20 @@
 from beanie import Document
+from typing import List
 from pydantic import Field
+from .schema import CartItems
 
 
-class Cart_Items(Document):
-    product_id: str
-    quantity: int
-    price: float
+class CartItemsModel(Document):
+    username: str
+    items: List[CartItems]
     total_price: float | None = Field(default=None)
 
     async def calculate_total_price(self):
-        self.total_price = self.price * self.quantity
+        total_price = 0
+        for item in self.items:
+            price = item.price * item.quantity
+            total_price += price
+        self.total_price = total_price
         await self.save()
 
     class Settings:

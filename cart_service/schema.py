@@ -2,33 +2,23 @@ from pydantic import BaseModel
 from typing import List
 
 
-class Cart_Items_IN(BaseModel):
-    """This schema defines the fields of the cart items post data
-
-    Args:
-        BaseModel (class):
-    """
-
+class CartItems(BaseModel):
     product_id: str
     quantity: int
     price: float
 
 
-class Cart_Items_OUT(Cart_Items_IN):
-    """Cart Items Model
-
-    Args:
-        Cart_Items_IN (user defined pydantic class):
-    """
-
-    total_price: float
+class AddToCart(BaseModel):
+    username: str
+    items: List[CartItems]
 
 
-class CartItems_ResponseModel(BaseModel):
-    """Response Model
+class GetCart(BaseModel):
+    _id: str | None = None
+    username: str
+    items: List[CartItems]
+    total_price: float | None
 
-    Args:
-        BaseModel (class):
-    """
 
-    data: Cart_Items_OUT | List[Cart_Items_OUT]
+class CartResponseModel(BaseModel):
+    data: GetCart

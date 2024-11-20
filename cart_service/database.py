@@ -5,7 +5,7 @@ from motor.motor_asyncio import (
 )
 from pymongo.server_api import ServerApi
 from beanie import init_beanie
-from .models import Cart_Items
+from .models import CartItemsModel
 
 MONGO_URI = "mongodb://localhost:27017"
 
@@ -13,7 +13,7 @@ client: AsyncIOMotorClient = None
 cart_db: AsyncIOMotorDatabase = None
 cart_items: AsyncIOMotorCollection = None
 
-doc_models = [Cart_Items]
+doc_models = [CartItemsModel]
 
 
 async def create_db(client: AsyncIOMotorClient):
